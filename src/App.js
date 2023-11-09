@@ -5,7 +5,7 @@ import PhotoGallery from './photoGallery';
 function App() {
   return (
     <div className="App">
-     <PhotoGallery></PhotoGallery>
+     <PhotoGallery />
     </div>
   );
 }

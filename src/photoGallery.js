@@ -6,13 +6,14 @@ import { updatePhoto } from './component/update';
 import { deletePhoto
  } from './component/delete';
  import { getPhotos } from './component/get';
-function     () {
+function PhotoGallery() {
   const [photos, setPhotos] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [photoData, setPhotoData] = useState({
     title: '',
     description: '',
+    imageUrl:''
     // other photo data fields
   });
   const [page, setPage] = useState(1);
@@ -22,7 +23,7 @@ function     () {
 
   const fetchPhotos = async () => {
     try {
-      const data = await getPhotos(page, limit, search, sort);
+      const data = await getPhotos();
       setPhotos(data.photos);
     } catch (error) {
       console.error(error);
@@ -63,10 +64,11 @@ function     () {
           </tr>
         </thead>
         <tbody>
-          {photos.map((photo) => (
+          {photos?photos.map((photo) => (
             <tr key={photo._id}>
-              <td>{photo.title}</td>
+              <td>{photo.name}</td>
               <td>{photo.description}</td>
+              <td>{photo.imageUrl}</td>
               {/* Add table cells for other fields */}
               <td>
                 <Button onClick={() => (photo._id)}>Delete</Button>
@@ -74,8 +76,9 @@ function     () {
                   onClick={() => {
                     setSelectedPhoto(photo);
                     setPhotoData({
-                      title: photo.title,
+                      title: photo.name,
                       description: photo.description,
+                      imageUrl:photo.imageUrl
                       // set other photo data fields
                     });
                     setShowModal(true);
@@ -85,9 +88,47 @@ function     () {
                 </Button>
               </td>
             </tr>
-          ))}
+          ))
+        :"NO DATA FOUND"}
         </tbody>
       </Table>
+    {photos?photos.map((photo) => (  <div class="card" key={photo._id} style={{width: "18rem"}}>
+  <img class="card-img-top" src=".../100px180/?text=Image cap" alt="Card image cap"></img>
+  <div class="card-body">
+    <p class="card-text"> {photo.name} 
+              {photo.description} 
+             {photo.imageUrl}Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <Button onClick={() => (photo._id)}>Delete</Button>
+                <Button
+                  onClick={() => {
+                    setSelectedPhoto(photo);
+                    setPhotoData({
+                      title: photo.name,
+                      description: photo.description,
+                      imageUrl:photo.imageUrl
+                      // set other photo data fields
+                    });
+                    setShowModal(true);
+                  }}
+                >
+                  Edit
+                </Button>
+  </div>
+</div>)): (  <div class="card"   style={{width: "18rem"}}>
+  <img class="card-img-top" src=".../100px180/?text=Image cap" alt="Card image cap"></img>
+  <div class="card-body">
+    <p class="card-text">  dname 
+                description
+            imageUrl Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <Button  >Delete</Button>
+                <Button
+                 
+                >
+                  Edit
+                </Button>
+  </div>
+</div>)
+}
 
       <Button
         disabled={page === 1}

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://your-backend-url/api/photos';
+const API_URL = 'http://localhost:3000/images';
 
 export const deletePhoto = async (photoId) => {
   try {
