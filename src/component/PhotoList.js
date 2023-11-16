@@ -3,11 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { getPhotos } from '../api';
 import {Button,Card,Form,Row,Col,Container} from 'react-bootstrap';
 //import Card from 'react-bootstrap/Card';
-import handleViewDetails from './GetPhotosById'
+import PhotoListById from './GetPhotosById'
+import { Link } from 'react-router-dom';
+import Pagination from 'react-bootstrap/Pagination';
+ 
 const PhotoList = () => {
   const [photos, setPhotos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [photosPerPage] = useState(10);
+  const [photosPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
 
@@ -15,6 +18,7 @@ const PhotoList = () => {
     const fetchPhotos = async () => {
       const data = await getPhotos();
       setPhotos(data);
+  
     };
     fetchPhotos();
   }, []);
@@ -27,29 +31,22 @@ const PhotoList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   // Search logic
-  const filteredPhotos = photos.filter((photo) =>
-    photo.title
-    //.toString().toLowerCase().includes(searchTerm.toString().toLowerCase())
-   
+  const filteredPhotos = currentPhotos.filter((photo) =>
+    photo.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    console.log(filteredPhotos,"filteredPhotos");
+
+
     // Sorting logic
  const sortedPhotos = [...filteredPhotos].sort((a, b) => {
     const order = sortOrder === 'asc' ? 1 : -1;
-    return order * a.title.localeCompare(b.title);
+    return order * a.name.localeCompare(b.name);
   });
-  const handleDownload = (imageUrl, title) => {
-    // Create a link element
-    const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = `${title}.jpg`;
-    document.body.appendChild(link);
 
-    // Trigger the click event to start the download
-    link.click();
-
-    // Clean up the link element
-    document.body.removeChild(link);
-  };
+  const handleItemClick = (photo) => {
+console.log((photo.name),(photo._id),(photo.index),"id") 
+ };
+  
   return (
     <div>
       <h2>Photo Gallery</h2>
@@ -73,23 +70,23 @@ const PhotoList = () => {
 
       <Container  >
 <Row className="justify-content-md-center d-flex flex-col"> {/* Display photos */}
-      { photos?  photos.map((photo) => (
+      { sortedPhotos?  sortedPhotos.map((photo,index) => (
        <> 
 
 
 <Col key={photo.id} xs={12} sm={6} md={3}>
-     <a  key={photo.id} style={{ width: '18rem' }}  className='custom-card'> 
+    <Link to={`/${index + 1}`}   > <a  key={photo._id} style={{ width: '18rem' }}  action onClick={() => handleItemClick(photo)}    className='custom-card'> 
      <div className='card'>
       <img variant="top" src={photo.imageUrl} />
       <div className='card-body'>
-        <div className='card-title'>{photo.title}</div>
+        <div className='card-title'>{photo.name}</div>
         <div className='card-text'>
         {photo.description}
         {photo.createdAt}
         </div>
-         <Button onClick={handleViewDetails}></Button>
+        
       </div></div>
-      </a> </Col>
+      </a> </Link></Col>
      </> ))
       
     
@@ -105,6 +102,7 @@ const PhotoList = () => {
           )
         )}
       </div>
+      
     </div>
   );
 };

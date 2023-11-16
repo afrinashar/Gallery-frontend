@@ -10,13 +10,13 @@ import Dashboard from './Dashboard';
 
 const App = () => {
   return (<>
-   <Dashboard/>
+   
 <Routes>
 <Route exact path="/"  element={ <Dashboard />}    />
 <Route exact path="/create"  element={ <CreatePhoto />}    />
 <Route exact path="/update"  element={    <UpdatePhoto />}    />
 <Route exact path="/delete"  element={<DeletePhoto />}    />
-<Route exact path="/"  element={ <PhotoListById/>}    />
+<Route exact path="/:id"  element={ <PhotoListById/>}    />
 </Routes>
 
 

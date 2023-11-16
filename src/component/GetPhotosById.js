@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { getPhotos, getPhotoById } from '../api';
 import {Button,Card,Form,Row,Col,Container,Modal} from 'react-bootstrap';
+import handleItemClick from './PhotoList'
+import { useParams } from 'react-router-dom';
+
 const PhotoListById = () => {
   const [photos, setPhotos] = useState([]);
   const [currentPhoto, setCurrentPhoto] = useState(null); // Added state for a single photo
@@ -9,6 +12,11 @@ const PhotoListById = () => {
   const [photosPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
+  const { id } = useParams();
+  const { state } = window.location;
+
+  // Access item data from the route state
+  const photo = state && state.photo;
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -17,9 +25,28 @@ const PhotoListById = () => {
     };
     fetchPhotos();
   }, []);
-
+  console.log(photo,"dataa")
+  console.log(( id.photos),"fetch")
   // Pagination logic, search logic, sorting logic remain unchanged
+// Pagination logic
+const indexOfLastPhoto = currentPage * photosPerPage;
+const indexOfFirstPhoto = indexOfLastPhoto - photosPerPage;
+const currentPhotos = photos.slice(indexOfFirstPhoto, indexOfLastPhoto);
 
+const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+// Search logic
+const filteredPhotos = photos.filter((photo) =>
+  photo.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  console.log(filteredPhotos,"filteredPhotos");
+
+
+  // Sorting logic
+const sortedPhotos = [...filteredPhotos].sort((a, b) => {
+  const order = sortOrder === 'asc' ? 1 : -1;
+  return order * a.name.localeCompare(b.name);
+});
   const handleViewDetails = async (photoId) => {
     try {
       const photo = await getPhotoById(photoId);
@@ -27,6 +54,11 @@ const PhotoListById = () => {
     } catch (error) {
       console.error('Error fetching photo by ID', error);
     }
+  };
+  const itemDetails = {
+    id,
+    name: `Item ${id}`,
+    // Add other item details as needed
   };
   const handleDownload = (imageUrl, title) => {
     // Create a link element
@@ -47,9 +79,18 @@ const PhotoListById = () => {
       
       {/* Display photos with a button to view details */}
       
-
+      <h2>Details for Item {  itemDetails.name
+}</h2>
+      <p>{photo && (
+        <div>
+          <p>Name: {photo.name}</p>
+          <p>Name: {photo.description}</p>
+          <p>Name: {photo.imageUrl}</p>
+          {/* Add other details here */}
+        </div>
+      )}</p>
       {/* Display details for the selected photo */}
-      {currentPhoto && (currentPhoto.map((photo)=>(
+      {sortedPhotos && (sortedPhotos.map((photo)=>(
          <div
          className="modal show"
          style={{ display: 'block', position: 'initial' }}
