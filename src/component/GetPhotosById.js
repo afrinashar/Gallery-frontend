@@ -1,10 +1,11 @@
 // PhotoList.js
 import React, { useState, useEffect } from 'react';
 import { getPhotos, getPhotoById } from '../api';
-import {Button,Card,Form,Row,Col,Container,Modal} from 'react-bootstrap';
+import {Button,Card,Image , DropdownButton,Dropdown,Form,Row,Col,Container,Modal} from 'react-bootstrap';
 import handleItemClick from './PhotoList'
 import { useParams } from 'react-router-dom';
-
+import { CiBoxList } from "react-icons/ci";
+import { useNavigate } from "react-router-dom"
 const PhotoListById = () => {
   const [photos, setPhotos] = useState([]);
   const [currentPhoto, setCurrentPhoto] = useState(null); // Added state for a single photo
@@ -14,10 +15,10 @@ const PhotoListById = () => {
   const [sortOrder, setSortOrder] = useState('asc');
   const { id } = useParams();
   const { state } = window.location;
-
+  const Navigate = useNavigate() 
   // Access item data from the route state
   const photo = state && state.photo;
-
+  const closeButton=()=>{Navigate('/')}
   useEffect(() => {
     const fetchPhotos = async () => {
       const data = await getPhotos();
@@ -79,7 +80,7 @@ const sortedPhotos = [...filteredPhotos].sort((a, b) => {
       
       {/* Display photos with a button to view details */}
       
-      <h2>Details for Item {  itemDetails.name
+      <h2>Details for Item {  itemDetails.id
 }</h2>
       <p>{photo && (
         <div>
@@ -90,35 +91,42 @@ const sortedPhotos = [...filteredPhotos].sort((a, b) => {
         </div>
       )}</p>
       {/* Display details for the selected photo */}
-      {sortedPhotos && (sortedPhotos.map((photo)=>(
+      {sortedPhotos && (sortedPhotos.map((photo,index)=>(
          <div
          className="modal show"
          style={{ display: 'block', position: 'initial' }}
        >
          <Modal.Dialog>
            <Modal.Header closeButton>
-             <Modal.Title>Modal title</Modal.Title>
+           <Card.Title>{photo.name}{photo.title }{index[0]}</Card.Title>
            </Modal.Header>
    
-           <Modal.Body>
-           <Card key={photo.id} style={{ width: '18rem' }} onClick={handleViewDetails}>
-      <Card.Img variant="top" src={photo.imageUrl} />
-      <Card.Body>
-        <Card.Title>{photo.title}</Card.Title>
-        <Card.Text>
-        {photo.description}
-        </Card.Text>
-        <Button variant="primary">Go somewhere</Button>
-        <Button variant="success" onClick={() => handleDownload(photo.imageUrl, photo.title)}>
-            Download
-          </Button>
-      </Card.Body>
-    </Card>
+           <Modal.Body >
+           
+      <Image    src={photo.imageUrl} fluid />
+     
+ 
            </Modal.Body>
    
            <Modal.Footer>
+           <Card.Body>
+        
+        <Card.Text >
+       <p><h6>description</h6>{photo.description}</p> 
+        <p>Created <h6>{photo.createdAt.slice(0,10)}</h6> </p>
+        </Card.Text>
+       
+       
+      </Card.Body>
+       <Button variant="success" onClick={() => handleDownload(photo.imageUrl, photo.title)}>
+            Download
+          </Button>
              <Button variant="secondary">Close</Button>
-             <Button variant="primary">Save changes</Button>
+              <DropdownButton icon={<CiBoxList />}  >
+      <Dropdown.Item href="/update:id">Update</Dropdown.Item>
+      <Dropdown.Item className='bg-danger text-white b-2' href="/delete:id">Delete</Dropdown.Item>
+  
+    </DropdownButton>
            </Modal.Footer>
          </Modal.Dialog>
        </div>

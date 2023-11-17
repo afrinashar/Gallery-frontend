@@ -50,24 +50,25 @@ console.log((photo.name),(photo._id),(photo.index),"id")
   return (
     <div>
       <h2>Photo Gallery</h2>
-
+<div className='d-inline p-2'>
       {/* Search bar */}
       <Form.Control
       xs={4} sm={3} md={2}
               type="text"
               placeholder="Search..."
-              className=" mr-sm-2"
+              className=" w-25 mr-sm-2"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
      
 
       {/* Sorting dropdown */}
-      <select onChange={(e) => setSortOrder(e.target.value)}>
+      <select  className=' btn btn-primary '  placeholder='SORT' onChange={(e) => setSortOrder(e.target.value)}>
+        SORT
         <option value="asc">Sort A-Z</option>
         <option value="desc">Sort Z-A</option>
       </select>
-
+      </div>
       <Container  >
 <Row className="justify-content-md-center d-flex flex-col"> {/* Display photos */}
       { sortedPhotos?  sortedPhotos.map((photo,index) => (

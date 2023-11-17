@@ -29,12 +29,15 @@ const CreatePhoto = () => {
       console.error('Error creating image:', error)
     }
   };
-
+  const closeButton=()=>{Navigate('/')}
   return (
     <div>
      <Modal show={showModal} key={photoData.id} onHide={handleCreate}>
-          <Modal.Header closeButton>
+          <Modal.Header >
             <Modal.Title>Create Profile</Modal.Title>
+            <button type="button" class="close"  onClick={closeButton()} aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
           </Modal.Header>
       <form onSubmit={handleCreate}>
       <Modal.Body>

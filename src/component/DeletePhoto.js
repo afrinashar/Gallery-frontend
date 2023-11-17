@@ -2,13 +2,18 @@
 import React, { useState } from 'react';
 import { deletePhoto } from '../api';
 
-const DeletePhoto = () => {
-  const [photoId, setPhotoId] = useState('');  
+import{ Modal, Button }from "react-bootstrap";
+import { useNavigate } from "react-router-dom"
 
+import axios from 'axios';
+const DeletePhoto = () => {
+  const Navigate = useNavigate() 
+  const [photoId, setPhotoId] = useState('');  
+  const closeButton=()=>{Navigate('/')}
   const handleDelete = async () => {
     try {
       await deletePhoto(photoId);
-       
+      setPhotoId((id) => deletePhoto.filter((item) => item.id !== id));
     } catch (error) {
       // Handle error, e.g., show an error message
     }
@@ -17,19 +22,25 @@ const DeletePhoto = () => {
   return (
     <div>
       <h2>Delete Photo</h2>
-      <form>
-        {/* Render input for photo ID and handle changes */}
-        <input
-          type="text"
-          placeholder="Photo ID"
-          value={photoId}
-          onChange={(e) => setPhotoId(e.target.value)}
-        />
-        <button type="button" onClick={handleDelete}>
-          Delete
-        </button>
-      </form>
-    </div>
+      <div
+      className="modal show"
+      style={{ display: "block", position: "initial" }}
+    >
+      <Modal.Dialog>
+        <Modal.Header closeButton>
+          <Modal.Title>Remove profile</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>are you sure to delete</p>
+        </Modal.Body>
+
+        <Modal.Footer key={photoId.id} >
+          <Button onClick={closeButton} variant="success">Close</Button>
+          <Button onClick={()=>handleDelete(photoId.id)} variant="danger">Delete</Button>
+        </Modal.Footer>
+      </Modal.Dialog>
+    </div> </div>
   );
 };
 
