@@ -8,7 +8,9 @@ import PhotoListById from './component/GetPhotosById';
 const Dashboard = () => {
   return (
     <div>
+
       <h1>Photo Gallery</h1>
+    
  <PhotoList/>
     </div>
   )

@@ -1,6 +1,7 @@
 // PhotoList.js
 import React, { useState, useEffect } from 'react';
 import { getPhotos, getPhotoById } from '../api';
+import { Link } from 'react-router-dom'
 import {Button,Card,Image , DropdownButton,Dropdown,Form,Row,Col,Container,Modal} from 'react-bootstrap';
 import handleItemClick from './PhotoList'
 import { useParams } from 'react-router-dom';
@@ -13,21 +14,23 @@ const PhotoListById = () => {
   const [photosPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
-  const { id } = useParams();
-  const { state } = window.location;
+  const params = useParams();
+ // const { state } = window.location;
   const Navigate = useNavigate() 
   // Access item data from the route state
-  const photo = state && state.photo;
+ // const photo = state && state.photo;
   const closeButton=()=>{Navigate('/')}
   useEffect(() => {
-    const fetchPhotos = async () => {
-      const data = await getPhotos();
+    const fetchPhotos = async (photoId) => {
+      const data = await getPhotoById(photoId );
       setPhotos(data);
-    };
+  
+   
+   }; 
     fetchPhotos();
   }, []);
-  console.log(photo,"dataa")
-  console.log(( id.photos),"fetch")
+  console.log(getPhotoById, "dataa", ) 
+ // console.log(( id.photos),"fetch")
   // Pagination logic, search logic, sorting logic remain unchanged
 // Pagination logic
 const indexOfLastPhoto = currentPage * photosPerPage;
@@ -41,7 +44,7 @@ const filteredPhotos = photos.filter((photo) =>
   photo.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   console.log(filteredPhotos,"filteredPhotos");
-
+ 
 
   // Sorting logic
 const sortedPhotos = [...filteredPhotos].sort((a, b) => {
@@ -57,8 +60,8 @@ const sortedPhotos = [...filteredPhotos].sort((a, b) => {
     }
   };
   const itemDetails = {
-    id,
-    name: `Item ${id}`,
+     
+    name: "",
     // Add other item details as needed
   };
   const handleDownload = (imageUrl, title) => {
@@ -82,14 +85,18 @@ const sortedPhotos = [...filteredPhotos].sort((a, b) => {
       
       <h2>Details for Item {  itemDetails.id
 }</h2>
-      <p>{photo && (
+       {  (
         <div>
-          <p>Name: {photo.name}</p>
+          {/*  <p>Name: {photo.name}</p>
           <p>Name: {photo.description}</p>
           <p>Name: {photo.imageUrl}</p>
-          {/* Add other details here */}
+         Add other details here */}
         </div>
-      )}</p>
+      )}
+      {params.id}
+      {params._id}
+      {params.name}
+   
       {/* Display details for the selected photo */}
       {sortedPhotos && (sortedPhotos.map((photo,index)=>(
          <div
@@ -98,7 +105,7 @@ const sortedPhotos = [...filteredPhotos].sort((a, b) => {
        >
          <Modal.Dialog>
            <Modal.Header closeButton>
-           <Card.Title>{photo.name}{photo.title }{index[0]}</Card.Title>
+           <Card.Title>{photo.name} {params.id.name} </Card.Title>
            </Modal.Header>
    
            <Modal.Body >
@@ -112,8 +119,8 @@ const sortedPhotos = [...filteredPhotos].sort((a, b) => {
            <Card.Body>
         
         <Card.Text >
-       <p><h6>description</h6>{photo.description}</p> 
-        <p>Created <h6>{photo.createdAt.slice(0,10)}</h6> </p>
+       <h6>description</h6>{photo.description} 
+       Created <h6>{photo.createdAt.slice(0,10)}</h6> 
         </Card.Text>
        
        
@@ -123,7 +130,8 @@ const sortedPhotos = [...filteredPhotos].sort((a, b) => {
           </Button>
              <Button variant="secondary">Close</Button>
               <DropdownButton icon={<CiBoxList />}  >
-      <Dropdown.Item href="/update:id">Update</Dropdown.Item>
+
+      <Dropdown.Item  >    <Link to={`/update/${photo._id}`}>Update</Link> </Dropdown.Item>
       <Dropdown.Item className='bg-danger text-white b-2' href="/delete:id">Delete</Dropdown.Item>
   
     </DropdownButton>

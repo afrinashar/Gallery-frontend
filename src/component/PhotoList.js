@@ -6,7 +6,7 @@ import {Button,Card,Form,Row,Col,Container} from 'react-bootstrap';
 import PhotoListById from './GetPhotosById'
 import { Link } from 'react-router-dom';
 import Pagination from 'react-bootstrap/Pagination';
- 
+ import handleViewDetails from './GetPhotosById'
 const PhotoList = () => {
   const [photos, setPhotos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,13 +44,13 @@ const PhotoList = () => {
   });
 
   const handleItemClick = (photo) => {
-console.log((photo.name),(photo._id),(photo.index),"id") 
+console.log((photo.name),(photo._id),(photo.imageUrl),"id") 
  };
   
   return (
     <div>
       <h2>Photo Gallery</h2>
-<div className='d-inline p-2'>
+<div className='d-inline p-2 '>
       {/* Search bar */}
       <Form.Control
       xs={4} sm={3} md={2}
@@ -75,8 +75,8 @@ console.log((photo.name),(photo._id),(photo.index),"id")
        <> 
 
 
-<Col key={photo.id} xs={12} sm={6} md={3}>
-    <Link to={`/${index + 1}`}   > <a  key={photo._id} style={{ width: '18rem' }}  action onClick={() => handleItemClick(photo)}    className='custom-card'> 
+<Col key={photo._id} xs={12} sm={6} md={3}>
+    <Link to={`/get/${photo._id}`}   > <a  key={photo._id} style={{ width: '18rem' }}  action onClick={() => handleItemClick(photo)}    className='custom-card'> 
      <div className='card'>
       <img variant="top" src={photo.imageUrl} />
       <div className='card-body'>

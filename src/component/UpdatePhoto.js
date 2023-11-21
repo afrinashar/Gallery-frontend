@@ -37,7 +37,7 @@ const UpdatePhoto = () => {
   const closeButton=()=>{Navigate('/')}
   return (
     <div>
-     <Modal show={showModal} key={photoData.id} onHide={handleUpdate}>
+     <Modal show={showModal} key={photoData._id} onHide={handleUpdate}>
           <Modal.Header >
             <Modal.Title>Update Profile</Modal.Title>
           </Modal.Header>

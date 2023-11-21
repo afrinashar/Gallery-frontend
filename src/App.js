@@ -16,7 +16,7 @@ const App = () => {
 <Route exact path="/create"  element={ <CreatePhoto />}    />
 <Route exact path="/update:id"  element={    <UpdatePhoto />}    />
 <Route exact path="/delete:id"  element={<DeletePhoto />}    />
-<Route exact path="/:id"  element={ <PhotoListById/>}    />
+<Route exact path="get/:id"  element={ <PhotoListById/>}    />
 </Routes>
 
 

@@ -35,9 +35,9 @@ const DeletePhoto = () => {
           <p>are you sure to delete</p>
         </Modal.Body>
 
-        <Modal.Footer key={photoId.id} >
+        <Modal.Footer key={photoId._id} >
           <Button onClick={closeButton} variant="success">Close</Button>
-          <Button onClick={()=>handleDelete(photoId.id)} variant="danger">Delete</Button>
+          <Button onClick={()=>handleDelete(photoId._id)} variant="danger">Delete</Button>
         </Modal.Footer>
       </Modal.Dialog>
     </div> </div>
