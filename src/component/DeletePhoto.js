@@ -13,9 +13,9 @@ const DeletePhoto = () => {
   const handleDelete = async () => {
     try {
       await deletePhoto(photoId);
-      setPhotoId((id) => deletePhoto.filter((item) => item.id !== id));
+      setPhotoId((id) => photoId.filter((item) => item.id !== id));
     } catch (error) {
-      // Handle error, e.g., show an error message
+      console.error('Error deleting photo:', error);
     }
   };
 
