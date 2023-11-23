@@ -1,91 +1,96 @@
-// UpdatePhoto.js
-import React, { useState } from 'react';
-import { updatePhoto } from '../api';
-import { Button, Row, Col, Form, Modal } from "react-bootstrap"
- 
-import { useNavigate } from "react-router-dom"
-const UpdatePhoto = () => {
-  const Navigate = useNavigate()
+import React, { useState, useEffect } from 'react';
+import { updatePhoto, getPhotos } from '../api';
+import { Modal, Button, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+
+const UpdatePhoto = ({ photoId }) => {
+  const Navigate = useNavigate();
   const [photoData, setPhotoData] = useState({
-    // initialize your form fields
-    title: '',
-    imageUrl: '',
-    // other fields...
+    name: '',
+    description: '',
+    // Add other properties as needed
   });
-  const [showModal, setShow] = useState(true)
-  const [photoId, setPhotoId] = useState(''); // set the initial photo ID
-  const handleChange = (e) => {
-    setPhotoData({ ...photoData, [e.target.name]: e.target.value },
-      //URL.createObjectURL(e.target.files[0])
-      );
+
+  useEffect(() => {
+    // Fetch photo data when the component mounts
+    const fetchPhotoData = async () => {
+      try {
+        const response = await getPhotos(photoId);
+        setPhotoData(response.data); // Assuming getPhoto returns photo data
+      } catch (error) {
+        console.error('Error fetching photo data:', error);
+      }
+    };
+
+    fetchPhotoData();
+  }, [photoId]);
+
+  const closeButton = () => {
+    Navigate('/');
   };
+
   const handleUpdate = async () => {
     try {
-     // const newPhoto = await createPhoto(photoData)
-     const updatedPhoto = await updatePhoto(photoId, photoData)
-      .then((response) => response.newPhoto)
-      .then((data) => console.log('Image updated:', data))
-
-      Navigate('/')
-      setPhotoData(updatedPhoto)
-      ;
-      // Handle success, e.g., show a success message or redirect
+      await updatePhoto(photoId, photoData);
+      console.log(photoId, photoData);
+      closeButton(); // Close the modal or navigate to another page
     } catch (error) {
-      // Handle error, e.g., show an error message
+      console.error('Error updating photo:', error);
     }
   };
-  const closeButton=()=>{Navigate('/')}
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPhotoData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   return (
     <div>
-     <Modal show={showModal} key={photoData._id} onHide={handleUpdate}>
-          <Modal.Header >
-            <Modal.Title>Update Profile</Modal.Title>
+      <h2>Update Photo</h2>
+      <div className="modal show" style={{ display: 'block', position: 'initial' }}>
+        <Modal.Dialog>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Photo</Modal.Title>
           </Modal.Header>
-      <form onSubmit={handleUpdate}>
-      <Modal.Body>
-        <div className="form-group">
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            className="form-control"
-            id="name"
-            name="name"
-            value={photoData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Description:</label>
-          <textarea
-            className="form-control"
-            id="description"
-            name="description"
-            value={photoData.description}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="imageUrl">Image URL:</label>
-          <input
-            type="text"
-            className="form-control"
-            id="imageUrl"
-            name="imageUrl"
-            value={photoData.imageUrl}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        </Modal.Body> 
-        <Modal.Footer>
-              <Button type="button" variant="primary" onClick={handleUpdate}>
-                Update Image
-              </Button>
-            </Modal.Footer>
-       
-      </form>
-      </Modal>
+
+          <Modal.Body>
+            <Form>
+              <Form.Group controlId="formName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={photoData.name}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formDescription">
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="description"
+                  value={photoData.description}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              {/* Add other form fields as needed */}
+            </Form>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button onClick={closeButton} variant="secondary">
+              Close
+            </Button>
+            <Button onClick={handleUpdate} variant="primary">
+              Update
+            </Button>
+          </Modal.Footer>
+        </Modal.Dialog>
+      </div>
     </div>
   );
 };

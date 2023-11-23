@@ -11,7 +11,7 @@ import Pagination from 'react-bootstrap/Pagination';
 const PhotoList = () => {
   const [photos, setPhotos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [photosPerPage] = useState(15);
+  const [photosPerPage] = useState(30);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
   const [show, setShow] = useState(false);

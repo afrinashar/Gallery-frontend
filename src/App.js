@@ -14,14 +14,10 @@ const App = () => {
 <Routes>
 <Route exact path="/"  element={ <Dashboard />}    />
 <Route exact path="/create"  element={ <CreatePhoto />}    />
-<Route exact path="/update:id"  element={    <UpdatePhoto />}    />
-<Route exact path="/delete:id"  element={<DeletePhoto />}    />
+<Route exact path="/update/:id"  element={<UpdatePhoto />}    />
+<Route exact path="/delete/:id"  element={<DeletePhoto />}    />
 <Route exact path="get/:id"  element={ <PhotoListById/>}    />
 </Routes>
-
-
-
-
  </> );
 };
 
