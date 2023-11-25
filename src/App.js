@@ -10,7 +10,7 @@ import Dashboard from './Dashboard';
 
 const App = () => {
   return (<>
-   
+   <p>hi</p>
 <Routes>
 <Route exact path="/"  element={ <Dashboard />}    />
 <Route exact path="/create"  element={ <CreatePhoto />}    />
